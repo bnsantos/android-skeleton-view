@@ -40,16 +40,21 @@ class PeopleFragment : Fragment(), Injectable{
                         onNext = {
                             when (it){
                                 is Resource.Success -> {
-                                    Log.i(this@PeopleFragment.javaClass.simpleName, "Success: " + it.data.toString())
-                                    mAdapter.append(it.data)
+                                    Log.i(this@PeopleFragment.javaClass.simpleName, "Success[${it.data.size}]: " + it.data.toString())
+                                    mAdapter.swap(it.data)
                                 }
                                 is Resource.Error -> {
                                     Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
                                     Log.e(this@PeopleFragment.javaClass.simpleName, "Error", it.exception)
                                 }
                                 is Resource.Loading -> {
-                                    Log.i(this@PeopleFragment.javaClass.simpleName, "Loading: " + it.data.toString())
-                                    mAdapter.swap(it.data)
+                                    Log.i(this@PeopleFragment.javaClass.simpleName, "Loading[${it.data.size}]: " + it.data.toString())
+                                    if(it.data.isEmpty()){
+                                        mAdapter.skeleton()
+                                    }else {
+
+                                        mAdapter.swap(it.data)
+                                    }
                                 }
                             }
                         },

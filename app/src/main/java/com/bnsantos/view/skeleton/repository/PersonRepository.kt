@@ -11,6 +11,7 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class PersonRepository @Inject constructor(private val mService: PeopleService, private val mDao: PersonDao){
+    private var mFinishedLoading = false
 
     private fun readCached(count: Int = 10): Flowable<Resource<List<Person>>> {
         return mDao.read()
@@ -18,7 +19,12 @@ class PersonRepository @Inject constructor(private val mService: PeopleService, 
                 .flatMap {
                     if (it != null) {
                         Log.i(this@PersonRepository.javaClass.simpleName, "onNext->Cached people[${it.size}]: " + it)
-                        Flowable.just(Resource.Loading(it))
+                        if (mFinishedLoading) {
+                            mFinishedLoading = false
+                            Flowable.just(Resource.Success(it))
+                        }else {
+                            Flowable.just(Resource.Loading(it))
+                        }
                     }else {
                         Flowable.empty()
                     }
@@ -32,6 +38,7 @@ class PersonRepository @Inject constructor(private val mService: PeopleService, 
                         onNext = {
                             if (it != null && it.mResults != null) {
                                 Log.i(this@PersonRepository.javaClass.simpleName, "Caching people[${it.mResults.size}]: " + it.mResults)
+                                mFinishedLoading = true
                                 mDao.insert(it.mResults)
                             }else {
                                 Log.i(this@PersonRepository.javaClass.simpleName, "No result")
