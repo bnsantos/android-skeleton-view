@@ -9,7 +9,7 @@ import com.bnsantos.view.skeleton.R
 import com.bnsantos.view.skeleton.model.Person
 import com.facebook.drawee.view.SimpleDraweeView
 
-class PeopleAdapter(var mPeople: List<Person> = listOf()) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class PeopleAdapter(var mPeople: List<Person> = listOf()) : RecyclerView.Adapter<PeopleAdapter.PersonHolder>() {
     private var mSkeletonMode: Boolean = false
 
     override fun getItemCount(): Int {
@@ -20,30 +20,28 @@ class PeopleAdapter(var mPeople: List<Person> = listOf()) : RecyclerView.Adapter
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
-        if(viewType == 1){
-            return SkeletonHolder(LayoutInflater.from(parent?.context).inflate(R.layout.adapter_skeleton, parent, false))
-        }else {
-            return PeopleHolder(LayoutInflater.from(parent?.context).inflate(R.layout.adapter_person, parent, false))
-        }
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): PersonHolder {
+        return PersonHolder(LayoutInflater.from(parent?.context).inflate(R.layout.adapter_person, parent, false))
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, pos: Int) {
+    override fun onBindViewHolder(holder: PersonHolder?, pos: Int) {
         when (holder) {
-            is PeopleHolder -> {
-                val person = mPeople[pos]
-                holder.mName.text = person.name
-                holder.mEmail.text = person.email
-                holder.mPicture.setImageURI(person.picture)
+            is PersonHolder -> {
+                if(!mSkeletonMode) {
+                    val person = mPeople[pos]
+                    holder.mName.text = person.name
+                    holder.mEmail.text = person.email
+                    holder.mPicture.setImageURI(person.picture)
+                    holder.mEmail.setBackgroundResource(0)
+                    holder.mName.setBackgroundResource(0)
+                }else {
+                    holder.mName.text = ""
+                    holder.mEmail.text = ""
+                    holder.mPicture.setActualImageResource(R.drawable.round)
+                    holder.mEmail.setBackgroundResource(R.color.lightGray)
+                    holder.mName.setBackgroundResource(R.color.lightGray)
+                }
             }
-        }
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        if(mSkeletonMode){
-            return 1
-        }else {
-            return 0
         }
     }
 
@@ -59,9 +57,7 @@ class PeopleAdapter(var mPeople: List<Person> = listOf()) : RecyclerView.Adapter
         notifyDataSetChanged()
     }
 
-    class SkeletonHolder(view: View): RecyclerView.ViewHolder(view)
-
-    class PeopleHolder(view: View): RecyclerView.ViewHolder(view) {
+    class PersonHolder(view: View): RecyclerView.ViewHolder(view) {
         val mName : TextView  = view.findViewById(R.id.name) as TextView
         val mEmail : TextView  = view.findViewById(R.id.email) as TextView
 
