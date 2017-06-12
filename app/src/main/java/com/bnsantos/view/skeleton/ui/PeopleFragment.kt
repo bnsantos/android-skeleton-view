@@ -8,6 +8,7 @@ import android.view.*
 import android.widget.Toast
 import com.bnsantos.view.skeleton.R
 import com.bnsantos.view.skeleton.di.Injectable
+import com.bnsantos.view.skeleton.ui.adapter.PeopleAdapter
 import com.bnsantos.view.skeleton.viewmodel.PeopleViewModel
 import com.bnsantos.view.skeleton.vo.Resource
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -50,7 +51,7 @@ class PeopleFragment : Fragment(), Injectable{
                                 is Resource.Loading -> {
                                     Log.i(this@PeopleFragment.javaClass.simpleName, "Loading[${it.data.size}]: " + it.data.toString())
                                     if(it.data.isEmpty()){
-                                        mAdapter.skeleton()
+                                        mAdapter.setSkeleton(true)
                                     }else {
 
                                         mAdapter.swap(it.data)
