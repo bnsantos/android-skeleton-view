@@ -13,6 +13,7 @@ object PersonDeserializer : JsonDeserializer<Person> {
             val picture = jsonObject.getAsJsonObject("picture")
 
             return Person(
+                    id = 0,
                     name = name["first"].asString + " " + name["last"].asString,
                     email = jsonObject["email"].asString,
                     gender = jsonObject["gender"].asString,

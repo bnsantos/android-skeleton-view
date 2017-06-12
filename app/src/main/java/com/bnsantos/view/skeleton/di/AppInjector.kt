@@ -8,13 +8,14 @@ import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
 import com.bnsantos.view.skeleton.App
 import com.bnsantos.view.skeleton.di.components.DaggerAppComponent
+import com.bnsantos.view.skeleton.di.modules.AppModule
 import dagger.android.AndroidInjection
 import dagger.android.support.AndroidSupportInjection
 import dagger.android.support.HasSupportFragmentInjector
 
 object AppInjector: Application.ActivityLifecycleCallbacks {
     fun init(app: App){
-        DaggerAppComponent.builder().application(app).build().inject(app)
+        DaggerAppComponent.builder().setAppModule(AppModule(app)).application(app).build().inject(app)
         app.registerActivityLifecycleCallbacks(this)
     }
 

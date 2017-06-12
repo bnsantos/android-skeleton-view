@@ -30,9 +30,15 @@ class PeopleAdapter(var mPeople: List<Person> = listOf()) : RecyclerView.Adapter
         notifyDataSetChanged()
     }
 
+    fun append(data: List<Person>) {
+        mPeople += data
+        notifyDataSetChanged()
+    }
+
     class PeopleHolder(view: View): RecyclerView.ViewHolder(view) {
         val mName : TextView  = view.findViewById(R.id.name) as TextView
         val mEmail : TextView  = view.findViewById(R.id.email) as TextView
         val mPicture : SimpleDraweeView = view.findViewById(R.id.picture) as SimpleDraweeView
+
     }
 }

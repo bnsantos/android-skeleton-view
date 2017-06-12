@@ -21,6 +21,7 @@ import javax.inject.Singleton
 interface AppComponent {
     @Component.Builder interface Builder {
         @BindsInstance fun application(app: App): Builder
+        fun setAppModule(module: AppModule): Builder
         fun build(): AppComponent
     }
 
